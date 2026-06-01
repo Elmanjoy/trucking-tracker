@@ -443,7 +443,7 @@ function Calculator() {
 }
 
 /* ─── Load Tracker ─────────────────────────────────────── */
-function LoadTracker({ activeTrip, trips, setTrips }: any) {
+function LoadTracker({ activeTrip, setActiveTrip, trips, setTrips }: any) {
   const trip = trips[activeTrip] || emptyTrip();
   const loads = trip.loads || [];
   const [fromCity, setFromCity] = useState("");
@@ -465,7 +465,7 @@ function LoadTracker({ activeTrip, trips, setTrips }: any) {
   return (
     <div>
       <TopBar title="Loads" subtitle="Log paying freight per trip" />
-      <TripSelectorDropdown value={activeTrip} onChange={() => {}} />
+      <TripSelectorDropdown value={activeTrip} onChange={setActiveTrip} />
       <Card>
         <Label color="var(--accent)" style={{ marginBottom: 12 }}>Pickup</Label>
         <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
@@ -512,7 +512,7 @@ function LoadTracker({ activeTrip, trips, setTrips }: any) {
 }
 
 /* ─── Fuel Tracker ─────────────────────────────────────── */
-function FuelTracker({ activeTrip, trips, setTrips }: any) {
+function FuelTracker({ activeTrip, setActiveTrip, trips, setTrips }: any) {
   const trip = trips[activeTrip] || emptyTrip();
   const fuels = trip.fuels || [];
   const [city, setCity] = useState("");
@@ -538,7 +538,7 @@ function FuelTracker({ activeTrip, trips, setTrips }: any) {
   return (
     <div>
       <TopBar title="Fuel" subtitle="Track diesel & DEF per stop" />
-      <TripSelectorDropdown value={activeTrip} onChange={() => {}} />
+      <TripSelectorDropdown value={activeTrip} onChange={setActiveTrip} />
       <Card>
         <Label color="var(--accent)" style={{ marginBottom: 12 }}>Fuel Stop</Label>
         <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
@@ -596,7 +596,7 @@ function FuelTracker({ activeTrip, trips, setTrips }: any) {
 }
 
 /* ─── Mileage ──────────────────────────────────────────── */
-function Mileage({ activeTrip, trips, setTrips }: any) {
+function Mileage({ activeTrip, setActiveTrip, trips, setTrips }: any) {
   const trip = trips[activeTrip] || emptyTrip();
   const entries = trip.mileage || [];
   const [week, setWeek] = useState("");
@@ -617,7 +617,7 @@ function Mileage({ activeTrip, trips, setTrips }: any) {
   return (
     <div>
       <TopBar title="Mileage" subtitle="Weekly odometer logging" />
-      <TripSelectorDropdown value={activeTrip} onChange={() => {}} />
+      <TripSelectorDropdown value={activeTrip} onChange={setActiveTrip} />
       <Card>
         <Label color="var(--accent)" style={{ marginBottom: 14 }}>Weekly Mileage — {activeTrip}</Label>
         <Field label="Week Label" unit="WK" unitTone="dim" value={week} onChange={setWeek} placeholder="e.g. May Wk 1" />
@@ -808,8 +808,6 @@ function Trips({ trips, setTrips }: any) {
 }
 
 /* ─── Root ─────────────────────────────────────────────── */
-const TABS_WITH_TRIP = ["loads", "fuel", "mileage"];
-
 export default function App() {
   const [tab, setTab] = useState("calc");
   const [activeTrip, setActiveTrip] = useState("Trip 1");
@@ -853,37 +851,12 @@ export default function App() {
       `}</style>
 
       <div style={{ maxWidth: 500, margin: "0 auto", minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", background: "var(--bg)" }}>
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "48px 20px 14px", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: 14, flexShrink: 0,
-              background: "linear-gradient(145deg, var(--accent), var(--accent-press))",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff", fontWeight: 800, fontSize: 18,
-              boxShadow: "0 6px 16px -6px rgba(244,112,35,0.7)",
-            }}>H</div>
-            <div>
-              <div style={{ fontSize: 12, color: "var(--text-dim)", fontWeight: 600, letterSpacing: 0.2 }}>Your earnings</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", letterSpacing: -0.2, lineHeight: 1.15 }}>HaulPay</div>
-            </div>
-          </div>
-          <IconBtn>{Ic.bell(19)}</IconBtn>
-        </div>
-
-        {/* Trip selector for data tabs */}
-        {TABS_WITH_TRIP.includes(tab) && (
-          <div style={{ padding: "0 20px" }}>
-            <TripSelectorDropdown value={activeTrip} onChange={setActiveTrip} />
-          </div>
-        )}
-
         {/* Screen content */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "4px 20px 130px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "20px 20px 130px" }}>
           {tab === "calc"    && <Calculator />}
-          {tab === "loads"   && <LoadTracker activeTrip={activeTrip} trips={trips} setTrips={setTrips} />}
-          {tab === "fuel"    && <FuelTracker activeTrip={activeTrip} trips={trips} setTrips={setTrips} />}
-          {tab === "mileage" && <Mileage activeTrip={activeTrip} trips={trips} setTrips={setTrips} />}
+          {tab === "loads"   && <LoadTracker activeTrip={activeTrip} setActiveTrip={setActiveTrip} trips={trips} setTrips={setTrips} />}
+          {tab === "fuel"    && <FuelTracker activeTrip={activeTrip} setActiveTrip={setActiveTrip} trips={trips} setTrips={setTrips} />}
+          {tab === "mileage" && <Mileage activeTrip={activeTrip} setActiveTrip={setActiveTrip} trips={trips} setTrips={setTrips} />}
           {tab === "trips"   && <Trips trips={trips} setTrips={setTrips} />}
         </div>
 
