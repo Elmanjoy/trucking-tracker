@@ -270,7 +270,7 @@ function BottomNav({ tab, setTab }: any) {
     { key: "trips",   label: "Trips",   icon: Ic.truck },
   ];
   return (
-    <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: "0 14px 22px", zIndex: 40, pointerEvents: "none" }}>
+    <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, padding: "0 14px 22px", zIndex: 40, pointerEvents: "none" }}>
       <div style={{
         pointerEvents: "auto",
         display: "flex", alignItems: "center", justifyContent: "space-between",
