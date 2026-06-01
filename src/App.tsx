@@ -86,7 +86,7 @@ function Pill({ children, tone = "neutral", style = {} }: any) {
   );
 }
 
-function Field({ label, unit, unitTone = "accent", value, onChange, placeholder, type = "text", style = {} }: any) {
+function Field({ label, unit, unitTone = "accent", value, onChange, placeholder, type = "text", style = {}, caps = false }: any) {
   const [focus, setFocus] = useState(false);
   return (
     <div style={{ minWidth: 0, ...style }}>
@@ -110,15 +110,17 @@ function Field({ label, unit, unitTone = "accent", value, onChange, placeholder,
         )}
         <input
           value={value}
-          onChange={e => onChange && onChange(e.target.value)}
+          onChange={e => onChange && onChange(caps ? e.target.value.toUpperCase() : e.target.value)}
           placeholder={placeholder}
           type={type}
+          autoCapitalize={caps ? "characters" : "sentences"}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           style={{
             flex: 1, width: "100%", minWidth: 0, border: "none", background: "transparent",
             color: "var(--text)", fontSize: 15, fontWeight: 500,
             padding: "14px 12px", outline: "none", fontFamily: "var(--font)",
+            textTransform: caps ? "uppercase" : "none",
           }}
         />
       </div>
@@ -469,13 +471,13 @@ function LoadTracker({ activeTrip, setActiveTrip, trips, setTrips }: any) {
       <Card>
         <Label color="var(--accent)" style={{ marginBottom: 12 }}>Pickup</Label>
         <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
-          <Field style={{ flex: 1 }} label="From" unit={Ic.pin(15)} value={fromCity} onChange={setFromCity} placeholder="Chicago" />
-          <Field style={{ width: 96 }} label="State" value={fromState} onChange={setFromState} placeholder="IL" />
+          <Field caps style={{ flex: 1 }} label="From" unit={Ic.pin(15)} value={fromCity} onChange={setFromCity} placeholder="CHICAGO" />
+          <Field caps style={{ width: 96 }} label="State" value={fromState} onChange={setFromState} placeholder="IL" />
         </div>
         <Label color="var(--accent)" style={{ margin: "18px 0 12px" }}>Drop</Label>
         <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
-          <Field style={{ flex: 1 }} label="To" unit={Ic.pin(15)} value={toCity} onChange={setToCity} placeholder="Atlanta" />
-          <Field style={{ width: 96 }} label="State" value={toState} onChange={setState => setToState(setState)} placeholder="GA" />
+          <Field caps style={{ flex: 1 }} label="To" unit={Ic.pin(15)} value={toCity} onChange={setToCity} placeholder="ATLANTA" />
+          <Field caps style={{ width: 96 }} label="State" value={toState} onChange={setToState} placeholder="GA" />
         </div>
         <div style={{ marginTop: 18 }}>
           <Field label="Load Pay" unit="$" type="number" value={pay} onChange={setPay} placeholder="0.00" />
@@ -542,8 +544,8 @@ function FuelTracker({ activeTrip, setActiveTrip, trips, setTrips }: any) {
       <Card>
         <Label color="var(--accent)" style={{ marginBottom: 12 }}>Fuel Stop</Label>
         <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
-          <Field style={{ flex: 1 }} label="City" unit={Ic.fuel(15)} value={city} onChange={setCity} placeholder="Dallas" />
-          <Field style={{ width: 96 }} label="State" value={st} onChange={setSt} placeholder="TX" />
+          <Field caps style={{ flex: 1 }} label="City" unit={Ic.fuel(15)} value={city} onChange={setCity} placeholder="DALLAS" />
+          <Field caps style={{ width: 96 }} label="State" value={st} onChange={setSt} placeholder="TX" />
         </div>
         <div style={{ marginTop: 16 }}>
           <Field label="Odometer Reading" unit="MI" unitTone="dim" type="number" value={odo} onChange={setOdo} placeholder="e.g. 125,400" />
@@ -842,7 +844,7 @@ export default function App() {
           --font-mono: 'Space Mono', ui-monospace, monospace;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        html, body { background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+        html, body { background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; overflow: hidden; width: 100%; height: 100%; }
         button { font-family: var(--font); }
         input::placeholder { color: var(--text-faint); opacity: 1; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
@@ -850,7 +852,8 @@ export default function App() {
         * { scrollbar-width: none; }
       `}</style>
 
-      <div style={{ maxWidth: 500, margin: "0 auto", height: "100vh", display: "flex", flexDirection: "column", position: "relative", background: "var(--bg)", overflow: "hidden" }}>
+      <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, display: "flex", justifyContent: "center", background: "var(--bg)", overflow: "hidden" }}>
+      <div style={{ width: "100%", maxWidth: 500, height: "100%", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
         {/* Screen content */}
         <div style={{ flex: 1, overflowY: "auto", padding: "20px 20px 130px" }}>
           {tab === "calc"    && <Calculator />}
@@ -862,6 +865,7 @@ export default function App() {
 
         {/* Bottom nav */}
         <BottomNav tab={tab} setTab={setTab} />
+      </div>
       </div>
     </>
   );
