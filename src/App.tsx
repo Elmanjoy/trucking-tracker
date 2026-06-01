@@ -850,7 +850,7 @@ export default function App() {
         * { scrollbar-width: none; }
       `}</style>
 
-      <div style={{ maxWidth: 500, margin: "0 auto", minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", background: "var(--bg)" }}>
+      <div style={{ maxWidth: 500, margin: "0 auto", height: "100vh", display: "flex", flexDirection: "column", position: "relative", background: "var(--bg)", overflow: "hidden" }}>
         {/* Screen content */}
         <div style={{ flex: 1, overflowY: "auto", padding: "20px 20px 130px" }}>
           {tab === "calc"    && <Calculator />}
